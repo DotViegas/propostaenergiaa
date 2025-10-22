@@ -1,0 +1,8 @@
+2025-10-22 12:23:07,975 - __main__ - INFO - Webhook recebido de 127.0.0.1 - Nome: cliente teste
+2025-10-22 12:23:07,976 - proposta - INFO - Iniciando processamento da proposta para cliente teste
+2025-10-22 12:23:10,963 - proposta - INFO - Proposta gerada com sucesso: D:\projetos\proposta-fastapi\propostas\proposta_cliente_teste_20251022_122308.pdf
+2025-10-22 12:23:11,286 - __main__ - INFO - Proposta gerada com sucesso: proposta_45a60629_20251022_122310.pdf
+2025-10-22 12:27:16,721 - __main__ - INFO - Webhook recebido de 127.0.0.1 - Nome: cliente teste
+2025-10-22 12:27:16,722 - proposta - INFO - Iniciando processamento da proposta para cliente teste
+2025-10-22 12:27:19,649 - proposta - INFO - Proposta gerada com sucesso: D:\projetos\proposta-fastapi\propostas\proposta_cliente_teste_20251022_122717.pdf
+2025-10-22 12:27:19,752 - __main__ - INFO - Proposta gerada com sucesso: proposta_cc6098fc_20251022_122719.pdf
