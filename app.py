@@ -74,7 +74,7 @@ class WebhookData(BaseModel):
 
 @app.get("/")
 async def root():
-    return {"message": "Proposta FastAPI - Sistema de Webhook para Geração de Propostas"}
+    return {"status": 200, "message": "Proposta FastAPI - Sistema de Webhook para Geração de Propostas", "version": "1.0.0", "proprietario": "Energia A", "contato admin": "viegas@energiaa.com.br"}
 
 @app.post("/webhook_proposta")
 @limiter.limit("10/minute")  # Limite de 10 requisições por minuto por IP
