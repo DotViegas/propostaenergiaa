@@ -854,13 +854,13 @@ def criar_proposta_pdf():
         p.drawString(35, altura - 533, f"A")
         p.setFillColorRGB(255/255, 194/255, 14/255)  # Amarelo
         p.setFont("Calibri-Bold", 14)
-        p.drawString(47, altura - 533, f"Imobiliária Solar")
+        p.drawString(47, altura - 533, f"Energia Solar por Assinatura")
         p.setFillColorRGB(1, 1, 1)
         p.setFont("Calibri-Light", 14)
-        p.drawString(141, altura - 533, f" é um modelo de negócio que permite às pessoas físicas e jurídicas gerarem")
-        p.drawString(35, altura - 546, f"sua própria energia solar e se beneficiar do sistema de compensação da Distribuidora sem a")
-        p.drawString(35, altura - 559, f"necessidade de realizar obras ou investimentos, sem taxas, sem fidelização e sem gastos")
-        p.drawString(35, altura - 572, f"com manutenção. Na prática, você loca uma parcela da usina solar já em operação.")
+        p.drawString(211, altura - 533, f" é um modelo de negócio que permite às pessoas físicas e")
+        p.drawString(35, altura - 546, f"jurídicas gerarem sua própria energia solar e se beneficiar do sistema de compensação da")
+        p.drawString(35, altura - 559, f"Distribuidora sem a necessidade de realizar obras ou investimentos, sem taxas, sem fidelização")
+        p.drawString(35, altura - 572, f"e sem gastos com manutenção. Na prática, você loca uma parcela da usina solar já em operação.")
 
         # Título "Passos"
         p.setFillColorRGB(255/255, 194/255, 14/255)

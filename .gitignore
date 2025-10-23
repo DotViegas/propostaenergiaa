@@ -1,2 +1,4 @@
 venv
 __pycache__/
+instrucao/
+webhook.log
