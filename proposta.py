@@ -1,23 +1,25 @@
 import os
 import sys
+import time
 import locale
-import matplotlib
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
-import numpy as np
+import logging
+import re
 from datetime import datetime
 from io import BytesIO
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.enums import TA_CENTER, TA_LEFT, TA_RIGHT
+from reportlab.platypus import Paragraph, Table, TableStyle
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfbase import pdfmetrics
-from reportlab.platypus import Table, TableStyle, Paragraph
-from reportlab.lib import colors
-from reportlab.lib.styles import ParagraphStyle
-from reportlab.lib.enums import TA_CENTER
-import time
-import re
-import logging
+from reportlab.lib.units import mm
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+import matplotlib.patches as patches
+import numpy as np
 
 # Configurar logging para o módulo proposta
 logger = logging.getLogger(__name__)
@@ -101,13 +103,46 @@ CONSUMO_MINIMO = parametros['consumo_minimo']
 EXPORTADOR_DIR = os.path.dirname(os.path.abspath(__file__))
 FONTS_DIR = os.path.join(EXPORTADOR_DIR, 'fonts')
 IMG_DIR = os.path.join(EXPORTADOR_DIR, 'img')
-OUTPUT_DIR = os.path.join(EXPORTADOR_DIR, 'propostas')
+OUTPUT_DIR = os.path.join(EXPORTADOR_DIR, 'media')
 
 def criar_diretorio_saida():
     """Cria o diretório de saída se não existir"""
     if not os.path.exists(OUTPUT_DIR):
         os.makedirs(OUTPUT_DIR)
-        print(f"Diretório criado: {OUTPUT_DIR}")
+        logger.info(f"Diretório criado: {OUTPUT_DIR}")
+
+def sanitizar_nome_arquivo(nome):
+    """Sanitiza o nome do arquivo removendo caracteres inválidos"""
+    # Remove caracteres especiais e substitui por underscore
+    nome_sanitizado = re.sub(r'[<>:"/\\|?*]', '_', nome)
+    # Remove espaços extras e substitui por underscore
+    nome_sanitizado = re.sub(r'\s+', '_', nome_sanitizado.strip())
+    # Remove underscores múltiplos
+    nome_sanitizado = re.sub(r'_+', '_', nome_sanitizado)
+    # Remove underscore no início e fim
+    nome_sanitizado = nome_sanitizado.strip('_')
+    # Limita o tamanho do nome
+    if len(nome_sanitizado) > 50:
+        nome_sanitizado = nome_sanitizado[:50]
+    return nome_sanitizado
+
+def validar_nome_completo(nome):
+    """Valida o campo nome_completo antes da geração do PDF"""
+    if not nome or not isinstance(nome, str):
+        raise ValueError("Nome completo é obrigatório e deve ser uma string")
+    
+    nome = nome.strip()
+    if len(nome) < 3:
+        raise ValueError("Nome completo deve ter pelo menos 3 caracteres")
+    
+    if len(nome) > 100:
+        raise ValueError("Nome completo não pode ter mais de 100 caracteres")
+    
+    # Verifica se contém pelo menos uma letra
+    if not re.search(r'[a-zA-ZÀ-ÿ]', nome):
+        raise ValueError("Nome completo deve conter pelo menos uma letra")
+    
+    return nome
 
 def formatar_moeda(valor):
     """Formata um valor numérico para o formato de moeda brasileiro"""
@@ -473,6 +508,10 @@ def calcular_valores_financeiros():
 def criar_proposta_pdf():
     """Cria o PDF da proposta"""
     try:
+        # Validar nome completo antes da geração
+        nome_validado = validar_nome_completo(NOME)
+        logger.info(f"Iniciando geração de PDF para: {nome_validado}")
+        
         # Calcular valores financeiros
         valores = calcular_valores_financeiros()
         
@@ -549,8 +588,8 @@ def criar_proposta_pdf():
         economia_5ano_incidencia_bandeira_escassez_hibrida_fmt = formatar_moeda(valores['economia_5ano_incidencia_bandeira_escassez_hibrida'])
 
         # Criar arquivo PDF
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        nome_arquivo = f"proposta_{NOME.replace(' ', '_')}_{timestamp}.pdf"
+        nome_sanitizado = sanitizar_nome_arquivo(NOME)
+        nome_arquivo = f"simulacao_{nome_sanitizado}.pdf"
         caminho_arquivo = os.path.join(OUTPUT_DIR, nome_arquivo)
         
         # Create PDF file
@@ -899,11 +938,19 @@ def criar_proposta_pdf():
         with open(caminho_arquivo, 'wb') as f:
             f.write(buffer.getvalue())
         
-        print(f"Proposta criada com sucesso: {caminho_arquivo}")
+        # Log de sucesso com informações detalhadas
+        logger.info(f"PDF gerado com sucesso!")
+        logger.info(f"Arquivo: {nome_arquivo}")
+        logger.info(f"Caminho completo: {caminho_arquivo}")
+        logger.info(f"Data/hora: {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}")
+        
         return caminho_arquivo
         
     except Exception as e:
-        print(f"Erro ao criar proposta: {str(e)}")
+        # Log de falha com detalhes do erro
+        logger.error(f"Falha na geração do PDF!")
+        logger.error(f"Erro: {str(e)}")
+        logger.error(f"Data/hora: {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}")
         return None
 
 def processar_proposta_webhook(nome_completo, endereco, valor_fatura):

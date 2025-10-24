@@ -120,13 +120,10 @@ async def webhook_proposta(request: Request, data: WebhookData):
                 detail="Arquivo gerado não encontrado"
             )
         
-        # Copiar arquivo para pasta media com nome único
-        nome_arquivo_media = f"proposta_{uuid.uuid4().hex[:8]}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
-        arquivo_media_path = os.path.join(media_dir, nome_arquivo_media)
-        
-        # Copiar arquivo
-        import shutil
-        shutil.copy2(arquivo_path, arquivo_media_path)
+        # O arquivo já foi gerado diretamente no diretório media com o nome correto
+        # Não é necessário copiar, apenas verificar se existe
+        arquivo_media_path = arquivo_path
+        nome_arquivo_media = os.path.basename(arquivo_path)
         
         # Ler arquivo e converter para base64
         with open(arquivo_media_path, 'rb') as f:
