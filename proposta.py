@@ -36,7 +36,7 @@ VALOR_FATURA_CLIENTE = str(valor_fatura)  # Formato: XXX.XX (sem R$ e com ponto 
 
 # Configurações fixas
 DESCONTO_CONTRATO = 20.0  # 20% de desconto
-TARIFA_ENERGISA = 1.126439  # Tarifa da Energisa por kWh
+TARIFA_ENERGISA = 1.138131  # Tarifa da Energisa por kWh
 
 def extrair_valor_monetario(valor_str):
     """Extrai o valor numérico de uma string monetária"""
