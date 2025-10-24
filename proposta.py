@@ -818,36 +818,6 @@ def criar_proposta_pdf():
         p.drawString(307, altura - 417, f"***Não pagar a fatura residual da Distribuidora. Pagar somente a Fatura LOCAÇÃO.")
         p.drawString(307, altura - 423, f"****O valor estimado com base na performance de geração de creditos a compensar no ciclo de faturamento.")
 
-        # Seção de economia com bandeiras tarifárias
-        p.setFillColorRGB(1, 1, 1)
-        p.setFont("arialmtbold", 6)
-        p.drawCentredString(220, altura - 454, f"ECONOMIA TOTAL C/ INCIDÊNCIA DAS BANDEIRAS")
-        p.setFont("arialmtbold", 7)
-        p.drawCentredString(332, altura - 454, f"Mensal")
-        p.drawCentredString(380, altura - 454, f"Anual")
-        p.drawCentredString(430, altura - 454, f"Em 5 anos")
-
-        # Dados das bandeiras
-        p.drawCentredString(220, altura - 466, f"Amarela")
-        p.drawCentredString(332, altura - 466, f"R$ {economia_incidencia_bandeira_amarela_fmt}")
-        p.drawCentredString(380, altura - 466, f"R$ {economia_anual_incidencia_bandeira_amarela_fmt}")
-        p.drawCentredString(430, altura - 466, f"R$ {economia_5ano_incidencia_bandeira_amarela_fmt}")
-
-        p.drawCentredString(220, altura - 474, f"Vermelha Patamar 1")
-        p.drawCentredString(332, altura - 474, f"R$ {economia_incidencia_bandeira_vermelha_patamar_1_fmt}")
-        p.drawCentredString(380, altura - 474, f"R$ {economia_anual_incidencia_bandeira_vermelha_patamar_1_fmt}")
-        p.drawCentredString(430, altura - 474, f"R$ {economia_5ano_incidencia_bandeira_vermelha_patamar_1_fmt}")
-
-        p.drawCentredString(220, altura - 482, f"Vermelha Patamar 2")
-        p.drawCentredString(332, altura - 482, f"R$ {economia_incidencia_bandeira_vermelha_patamar_2_fmt}")
-        p.drawCentredString(380, altura - 482, f"R$ {economia_anual_incidencia_bandeira_vermelha_patamar_2_fmt}")
-        p.drawCentredString(430, altura - 482, f"R$ {economia_5ano_incidencia_bandeira_vermelha_patamar_2_fmt}")
-        
-        p.drawCentredString(220, altura - 490, f"Escassez Hídrica")
-        p.drawCentredString(332, altura - 490, f"R$ {economia_incidencia_bandeira_escassez_hibrida_fmt}")
-        p.drawCentredString(380, altura - 490, f"R$ {economia_anual_incidencia_bandeira_escassez_hibrida_fmt}")
-        p.drawCentredString(430, altura - 490, f"R$ {economia_5ano_incidencia_bandeira_escassez_hibrida_fmt}")
-
         # Seção Imobiliária Solar
         p.setFillColorRGB(1, 1, 1)  # Branco
         p.setFont("Calibri-Light", 14)
