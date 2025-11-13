@@ -6,11 +6,11 @@ from datetime import datetime
 from typing import Optional
 from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.responses import JSONResponse
-from pydantic import BaseModel, validator
+from pydantic import BaseModel, field_validator
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
-from proposta import processar_proposta_webhook
+from proposta import processar_proposta_webhook, formatar_moeda
 
 # Configurar logging
 logging.basicConfig(
@@ -35,19 +35,22 @@ class WebhookData(BaseModel):
     endereco: str
     valor_fatura: str
     
-    @validator('nome_completo')
+    @field_validator('nome_completo')
+    @classmethod
     def validate_nome_completo(cls, v):
         if not v or len(v.strip()) < 3:
             raise ValueError('Nome completo deve ter pelo menos 3 caracteres')
         return v.strip()
     
-    @validator('endereco')
+    @field_validator('endereco')
+    @classmethod
     def validate_endereco(cls, v):
         if not v or len(v.strip()) < 10:
             raise ValueError('Endereço deve ter pelo menos 10 caracteres')
         return v.strip()
     
-    @validator('valor_fatura')
+    @field_validator('valor_fatura')
+    @classmethod
     def validate_valor_fatura(cls, v):
         if not v:
             raise ValueError('Valor da fatura é obrigatório')
@@ -74,7 +77,7 @@ class WebhookData(BaseModel):
 
 @app.get("/")
 async def root():
-    return {"status": 200, "message": "Proposta FastAPI - Sistema de Webhook para Geração de Propostas", "version": "1.0.0", "proprietario": "Energia A", "contato admin": "viegas@energiaa.com.br"}
+    return {"status": 200, "message": "Proposta FastAPI - Sistema de Webhook para Geração de Propostas", "version": "1.1.0", "proprietario": "Energia A", "contato admin": "viegas@energiaa.com.br"}
 
 @app.post("/webhook_proposta")
 @limiter.limit("10/minute")  # Limite de 10 requisições por minuto por IP
@@ -145,6 +148,9 @@ async def webhook_proposta(request: Request, data: WebhookData):
             "arquivo_url": arquivo_url,
             "arquivo_nome": nome_arquivo_media,
             "arquivo_base64": arquivo_base64,
+            "valor_desconto": formatar_moeda(resultado['valor_desconto']),
+            "economia_ano":  formatar_moeda(resultado['economia_ano']),
+            "economia_5ano": formatar_moeda(resultado['economia_5ano']),
             "dados_processados": {
                 "nome_completo": data.nome_completo,
                 "endereco": data.endereco,

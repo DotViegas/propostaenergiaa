@@ -1023,12 +1023,18 @@ def processar_proposta_webhook(nome_completo, endereco, valor_fatura):
             if not os.path.exists(arquivo_path):
                 raise Exception("Arquivo PDF não foi criado corretamente")
             
+            # Calcular valores financeiros para retornar
+            valores = calcular_valores_financeiros()
+            
             logger.info(f"Proposta gerada com sucesso: {arquivo_path}")
             
             return {
                 'sucesso': True,
                 'arquivo_path': arquivo_path,
                 'dados_processados': parametros_webhook,
+                'valor_desconto': valores['valor_desconto'],
+                'economia_ano': valores['economia_ano'],
+                'economia_5ano': valores['economia_5ano'],
                 'message': 'Proposta gerada com sucesso'
             }
             
